@@ -1,15 +1,24 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.math.BigDecimal;
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        List<FormaPagamento> pagamentos = new ArrayList<>();
+        pagamentos.add(new CartaoCredito("1234567812345678")); // válido
+        pagamentos.add(new Boleto("12345678901234567890123456789012345678901234567")); // válido
+        pagamentos.add(new Pix("usuario@email.com")); // válido
+        pagamentos.add(new CartaoCredito("111")); // inválido
+        pagamentos.add(new Pix("chaveInvalida")); // inválido
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        BigDecimal valor = new BigDecimal("150.00");
+
+        for (FormaPagamento pagamento : pagamentos) {
+            System.out.println("\nTestando pagamento com: " + pagamento.getClass().getSimpleName());
+            try {
+                pagamento.processarPagamento(valor);
+            } catch (PagamentoInvalidoException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
         }
     }
 }
